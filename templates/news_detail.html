@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ article.title }}</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #00090f;
+            color: white;
+        }
+
+        .navigation-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: transparent;
+            position: relative;
+            height: 100px;
+        }
+
+        .left-side {
+            display: flex;
+            align-items: center;
+        }
+
+        .pill {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .circle {
+            width: 70px;
+            height: 70px;
+            background-color: white;
+            border-radius: 50%;
+            display: flex;
+            margin-left: 100px;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .circle img {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+            display: block;
+        }
+
+        .text {
+            margin-left: 30px;
+        }
+
+        .pill::after {
+            content: '↓';
+            font-size: 50px;
+            margin-left: 10px;
+            transition: transform 0.3s;
+        }
+
+        .pill.up::after {
+            content: '↑';
+            margin-left: -355px;
+            transition: transform 0.3s;
+        }
+
+        .line {
+            position: absolute;
+            top: 100%;
+            left: 5%;
+            width: 90%;
+            height: 1px;
+            background-color: white;
+            transform: translateY(-50%) rotate(180deg);
+        }
+
+        .line-down {
+            position: absolute;
+            top: 0%;
+            left: 5%;
+            width: 90%;
+            height: 1px;
+            background-color: white;
+            transform: translateY(-50%) rotate(180deg);
+            margin-top: 50%;
+        }
+
+        .login a {
+            cursor: pointer;
+            margin-right: 150px;
+            color: white;
+            text-decoration: none;
+        }
+
+        .navigation-menu {
+            display: none;
+            flex-direction: row;
+            align-items: flex-start;
+            padding: 20px;
+            position: absolute;
+            top: 121px;
+            left: 5%;
+            width: 88%;
+            z-index: 2;
+            background: rgba(255, 255, 255, 0.16);
+            border-radius: 16px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(6.6px);
+            -webkit-backdrop-filter: blur(6.6px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .navigation-links {
+            width: 20%;
+        }
+
+        .navigation-links ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .navigation-links ul li {
+            margin: 10px 0;
+            cursor: pointer;
+            text-align: center;
+            margin-top: 8%;
+            margin-left: 50%;
+        }
+
+        .navigation-links a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .divider {
+            position: absolute;
+            top: 50%;
+            left: 20%;
+            width: 20%;
+            height: 1px;
+            background-color: white;
+            transform: translateY(50%) rotate(90deg);
+        }
+
+        .advertisement {
+            width: 100%;
+            text-align: center;
+            margin-top: 1%;
+            color: white;
+        }
+
+        .advertisement a {
+            text-decoration: none;
+            color: white;
+        }
+
+        .advertisement img {
+            width: 70%;
+            height: 250px;
+            margin-top: 1%;
+            margin-left: 20%;
+        }
+
+        .rek {
+            margin-left: 20%;
+            text-transform: uppercase;
+            font-weight: bolder;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .back-button {
+            background-color: #fff;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            width: 50%;
+            margin-top: 5%;
+            margin-bottom: 5%;
+        }
+
+        .back-button:hover {
+            background-color: grey;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            width: 50%;
+            margin-top: 5%;
+            margin-bottom: 5%;
+            transition: all .3s ease-in;
+        }
+
+        .back-button a {
+            text-decoration: none;
+            color: black;
+            text-align: center;
+            font-size: 20px;
+        }
+
+        .article-image {
+            width: 100%;
+            max-height: 400px;
+            object-fit: cover;
+            background-color: #444;
+        }
+
+        h1 {
+            font-size: 2em;
+            margin: 20px 0;
+        }
+
+        .content {
+            text-align: left;
+            margin: 20px 0;
+            line-height: 1.6;
+        }
+
+        .publisher-info {
+            margin-top: 30px;
+            font-size: 0.9em;
+            color: #bbb;
+        }
+
+ /* Footer styles */
+ .footer {
+            background-color: #00090f;
+            color: white;
+            padding: 40px 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            margin-left: 10%;
+            margin-top: 5%;
+        }
+
+        .footer .column {
+            width: 20%;
+        }
+
+        .footer a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .social-media {
+            width: 10%;
+            display: flex;
+            justify-content: flex-end; /* Aligns the icons to the right side */
+        }
+
+        .social-media .icons {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* 3 columns with equal width */
+            grid-gap: 10px; /* Space between the icons */
+        }
+
+        .social-media .icons a {
+            width: 40px;
+            height: 40px;
+            background-color: #666;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: #1a1a1a;
+            text-decoration: none;
+        }
+
+        .footer .logo {
+            width: 30%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .footer .logo p {
+            text-align: center;
+        }
+
+        .footer .logo img {
+            width: 100px;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="navigation-bar">
+        <div class="left-side">
+            <div class="circle">
+                <img src="../static/image/Cyber Got Talent white.png" alt="Logo">
+            </div>
+            <div class="text">Cyber Got Talent</div>
+        </div>
+        <div class="pill" id="pill"></div>
+        <div class="login"><a href="/login">LOGIN</a></div>
+        <div class="line"></div>
+    </div>
+    <div class="navigation-menu" id="navigation-menu">
+        <div class="navigation-links">
+            <ul>
+                <li><a href="/">HEM</a></li>
+                <li><a href="/about">OM OSS</a></li>
+                <li><a href="/table-uno">TABELL</a></li>
+                <li><a href="/vote">RÖSTA</a></li>
+                <li><a href="/news">NYHETER</a></li>
+                <li><a href="/tickets">KÖP BILJETTER</a></li>
+                <li><a href="/merch">MERCH</a></li>
+            </ul>
+        </div>
+        <div class="divider"></div>
+            <div class="advertisement">
+                <a href="/reklam">
+                        <div class="rek">REKLAM</div>
+                        <img src="../static/image/popup.png" alt="Halloween Ad">
+                    </div>
+                </a>
+            </div>
+
+        <div class="container">
+            <button class="back-button">
+                <a href="{{ url_for('index') }}">Back</a>
+            </button>
+            <img class="article-image" src="{{ url_for('static', filename='news_images/' + article.image) }}" alt="{{ article.title }}">
+            <h1>{{ article.title }}</h1>
+            <div class="content">
+                <p>{{ article.content }}</p>
+            </div>
+            <div class="publisher-info">
+                <p>Published by {{ article.publisher }} on {{ article.published_date.strftime('%Y-%m-%d') }}</p>
+            </div>
+        </div>
+
+
+        <div class="footer">
+            <div class="line-down"></div>
+            <div class="column">
+                <h3>The Champions</h3>
+                <p><a href="">Champions</a></p>
+                <p><a href="">Tabell</a></p>
+                <p><a href="">Contact</a></p>
+            </div>
+            <div class="column" style="margin-left: -5%;">
+                <h3>About</h3>
+                <p><a href="">Sponsorer</a></p>
+                <p><a href="">Team</a></p>
+                <p><a href="">Hosting</a></p>
+            </div>
+            <div class="column" style="margin-left: -5%; width:27%;">
+                <h3>OM CGT</h3>
+                <p> Ateljéerna är anmärkningsvärda, de är väldigt fina, stora och det finns massor med olika material som man kan använda sig av till sina projekt. 
+                    det finns också många tillfällen ... Grymma lärare och klasskamrater likaså gjorde mina tre år på Cybergymnasiet till en super härlig upplevelse.</p>
+            </div>
+            <div class="social-media" style="margin-left: 5%;">
+                <div class="icons">
+                    <a href="https://www.facebook.com/people/Cybergottalent-Cybergottalent/pfbid02zSXAS1fa4xDamfAnjF3rmYUuedsSASu96zJNsnGkeK5JL2y88YQiPWptWWfYFMiyl/"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://www.snapchat.com/add/cybergottalent"><i class="fab fa-snapchat-ghost"></i></a>
+                    <a href="https://www.instagram.com/cybergottalent/"><i class="fab fa-instagram"></i></a>
+                    <a href="https://x.com/Cybergottalent"><i class="fab fa-twitter"></i></a>
+                    <a href="https://www.tiktok.com/@cybergottalent"><i class="fab fa-tiktok"></i></a>
+                    <a href="#"><i class="fab fa-github"></i></a>
+                    <a href="mailto:cybergottalent.se@gmail.com"><i class="fas fa-envelope"></i></a>
+                    <a href="callto:+46 729 144 755"><i class="fas fa-phone"></i></a>
+                    <a href="https://www.cybergymnasiet.se/"><i class="fas fa-star"></i></a> <!-- Custom logo placeholder -->
+                </div>
+            </div>
+            <div class="logo" style="margin-left: -5%;">
+                <img src="../static/image/Cyber Got Talent white.png" alt="Logo">
+                <p>Upphovsrätt till <br><span>Cyber Got Talent © 2023</span></p>
+            </div>
+        </div>
+    
+        <script>
+            document.getElementById('pill').addEventListener('click', function() {
+                var menu = document.getElementById('navigation-menu');
+                var pill = document.getElementById('pill');
+                if (menu.style.display === 'none' || menu.style.display === '') {
+                    menu.style.display = 'flex';
+                    pill.classList.add('up');
+                } else {
+                    menu.style.display = 'none';
+                    pill.classList.remove('up');
+                }
+            });
+        </script>
+</body>
+</html>
