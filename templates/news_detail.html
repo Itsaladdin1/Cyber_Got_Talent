@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ article.title }}</title>
+</head>
+<body>
+    <h1>{{ article.title }}</h1>
+    <img src="{{ url_for('static', filename='news_images/' + article.image) }}" alt="{{ article.title }}">
+    <p>Published by {{ article.publisher }} on {{ article.published_date.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+    <p>Published by {{ article.publisher }} on {{ article.published_date.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+    <p>{{ article.content }}</p>
+    <a href="{{ url_for('index') }}">Back to Home</a>
+</body>
+</html>
