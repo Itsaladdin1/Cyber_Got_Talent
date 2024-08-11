@@ -4,19 +4,47 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cyber News</title>
+    <style>
+        .month-button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 5px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .month-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 <body>
     <h1>Cyber News</h1>
+
+    <!-- Display the latest 4 articles -->
+    <h2>Latest News</h2>
     <ul>
-        {% for article in articles %}
+        {% for article in latest_articles %}
         <li>
-            <a href="{{ url_for('news_detail', article_id=article.id) }}">
+            <a href="{{ url_for('news_detail', slug=article.slug) }}">
                 <img src="{{ url_for('static', filename='news_images/' + article.image) }}" alt="{{ article.title }}" width="100">
                 <h2>{{ article.title }}</h2>
             </a>
-            <p>Published by {{ article.publisher }} on {{ article.published_date.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+            <p>Published by {{ article.publisher }} on {{ article.published_date.strftime('%Y-%m-%d') }}</p>
         </li>
         {% endfor %}
     </ul>
+
+    <!-- Buttons for each month to access older news -->
+    <h2>News by Month</h2>
+    <div>
+        {% for month in months %}
+        <a href="{{ url_for('news_by_month', month_name=month.name) }}" class="month-button">{{ month.name }}</a>
+        {% endfor %}
+    </div>
 </body>
 </html>
