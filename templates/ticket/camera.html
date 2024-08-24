@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{{ url_for('static', filename='image/logo.jpg') }}">
+    <title>QR Code Scanner</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #092635;
+            color: #EEB76B;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        #video {
+            width: 640px;
+            height: 480px;
+            margin-bottom: 20px;
+            border: 2px solid #ccc;
+            background-color: #fff;
+        }
+
+        #result {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        #result.valid {
+            color: green;
+        }
+
+        #result.invalid {
+            color: grey;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .button {
+            margin: 0 10px;
+            padding: 10px 20px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>QR Code Scanner</h1>
+    <video id="video" autoplay></video>
+    <div id="result"></div> <!-- Add this div for displaying the result -->
+    <div class="button-container">
+        <button id="startButton" class="button" onclick="startScanning()">Start</button>
+        <button id="stopButton" class="button" onclick="stopScanning()">Stop</button>
+    </div>
+    <p id="scanningStatus">Scanning: Stopped</p> <!-- Indicator for scanning status -->
+    {% if last_scan_time %}
+        <p>Last scanned: {{ last_scan_time | safe }}</p>
+    {% else %}
+        <p>Läs mig.</p>
+    {% endif %}
+
+    <script>
+        let scanningInterval;
+
+        function handleScanResult(data) {
+            const resultDiv = document.getElementById('result');
+            if (data.trim() === 'Ogiltig biljett: Biljett hittades inte i databasen.') {
+                resultDiv.innerText = data;
+                resultDiv.className = 'invalid';
+            } else if (data.trim() === 'Ingen QR-kod hittades i bilden') {
+                resultDiv.innerText = data;
+                resultDiv.className = 'invalid';
+            } else {
+                resultDiv.innerText = data;
+                resultDiv.className = 'valid';
+            }
+        }
+
+        function startScanning() {
+            document.getElementById('scanningStatus').innerText = 'Scanning: Active'; // Update status indicator
+            const video = document.getElementById('video');
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                navigator.mediaDevices.getUserMedia({ video: true })
+                    .then(stream => {
+                        video.srcObject = stream;
+                        video.play();
+                        scanningInterval = setInterval(decodeQRCode, 1000);
+                    })
+                    .catch(error => {
+                        console.error('Error accessing the camera:', error);
+                    });
+            }
+        }
+
+        function stopScanning() {
+            document.getElementById('scanningStatus').innerText = 'Scanning: Stopped'; // Update status indicator
+            clearInterval(scanningInterval);
+        }
+
+        function decodeQRCode() {
+            const video = document.getElementById('video');
+            const canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            const context = canvas.getContext('2d');
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+            const dataURL = canvas.toDataURL('image/png');
+
+            // Send image data as data URL
+            fetch('/scan_qr', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ image_data: dataURL })
+            }).then(response => {
+                return response.text();
+            }).then(data => {
+                console.log(data);
+                handleScanResult(data);
+            }).catch(error => {
+                console.error('Error:', error);
+                const resultDiv = document.getElementById('result');
+                resultDiv.innerText = 'Ogiltig biljett: Ett fel uppstod vid kommunikation med servern.';
+                resultDiv.className = 'invalid';
+            });
+        }
+    </script>
+</body>
+</html>

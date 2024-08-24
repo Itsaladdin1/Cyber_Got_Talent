@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ticket Checker</title>
+    <link rel="icon" href="{{ url_for('static', filename='image/logo.jpg') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #092635;
+        }
+
+        h1, h2 {
+            color: #EEB76B;
+            text-align: center;
+        }
+
+        form {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        input[type="text"], input[type="number"], input[type="email"] {
+            width: 90%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: 1px solid #EEB76B;
+            box-sizing: border-box;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #EEB76B;
+        }
+
+        .container {
+            max-width: 830px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #344955;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .row {
+            display: flex;
+            color: #EEB76B;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+
+        .seat {
+            background-color: black;
+            color: #EEB76B;
+            text-align: center;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 50px;
+            height: 50px;
+            line-height: 50px; /* Center text vertically */
+            margin: 5px;
+        }
+
+        .seat.booked {
+            background-color: #f9f9f9;
+            cursor: not-allowed;
+        }
+
+        .seat.selected {
+            background-color: #EEB76B;
+            color: #fff;
+        }
+
+        a {
+            text-decoration: none;
+            color: #EEB76B;
+            margin-left: 10px;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+        img{
+            width:90%;
+            margin-left:7%;
+            margin-bottom:5%;
+            cursor: not-allowed;
+            border:1px solid grey;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+
+        <h2>Tillgängliga biljetter</h2>
+        <img src="https://t3.ftcdn.net/jpg/05/83/57/08/360_F_583570851_be9v6zdgynxIsi03oHwnwZfqFLmu5I8O.jpg" alt="stage">
+        <h2>Antal biljetter kvar är: {{ num_available_tickets }}</h2>
+
+        {% for row_number in range(1, 6) %}
+            <div class="row">
+
+                <div class="row-number">Rad {{ row_number }}</div>
+
+                {% for seat_number in range(1, 14) %}
+                    {% set is_booked = (row_number, seat_number) in booked_seats %}
+                    {% if is_booked %}
+                        <div class="seat booked" data-row="{{ row_number }}" data-seat="{{ seat_number }}">{{ seat_number }}</div>
+                    {% else %}
+                        <div class="seat" data-row="{{ row_number }}" data-seat="{{ seat_number }}">{{ seat_number }}</div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% endfor %}
+
+
+        <h2>Beställ din biljett här</h2>
+        <form action="/create_ticket" method="post">
+            <input type="text" id="name" name="name" placeholder="Namn" required>
+            <input type="email" id="email" name="email" placeholder="E-mail" required>
+            <input type="number" id="row" name="row" placeholder="Rad" required>
+            <input type="number" id="seat" name="seat" placeholder="Plats" required>
+            <button type="submit">Fortsätt</button>
+        </form>
+    </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const createTicketForm = document.getElementById('create-ticket-form');
+        const ticketIdInput = document.getElementById('ticket_id'); // Ensure this matches your hidden input field ID
+        const seats = document.querySelectorAll('.seat');
+        const rowInput = document.getElementById('row');
+        const seatInput = document.getElementById('seat');
+        let lastClickedSeat = null;
+
+        seats.forEach(seat => {
+            seat.addEventListener('click', function () {
+                if (lastClickedSeat) {
+                    lastClickedSeat.classList.remove('selected');
+                }
+                seat.classList.add('selected');
+                const selectedRow = seat.getAttribute('data-row');
+                const selectedSeat = seat.getAttribute('data-seat');
+                rowInput.value = selectedRow;
+                seatInput.value = selectedSeat;
+                lastClickedSeat = seat;
+            });
+        });
+
+        createTicketForm.addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const formData = new FormData(createTicketForm);
+
+            // Example of dynamically setting ticket_id based on user interaction
+            // Replace with your logic to set ticket_id dynamically
+            const ticketId = 'your_dynamic_ticket_id_logic_here';
+            ticketIdInput.value = ticketId;  // Update the hidden input field value
+
+            try {
+                const response = await fetch('/create_ticket', {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                if (response.ok) {
+                    window.location.href = '/payment';  // Redirect after successful form submission
+                } else {
+                    console.error('Failed to create ticket');
+                }
+            } catch (error) {
+                console.error('Error creating ticket:', error);
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

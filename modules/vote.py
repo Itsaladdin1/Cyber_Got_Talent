@@ -12,7 +12,7 @@ def get_db_connection():
     conn.row_factory = sqlite3.Row
     return conn
 
-def initialize_database():
+def initialize_database(vote_db_path):
     with get_db_connection() as conn:
         cursor = conn.cursor()
         cursor.execute('''
@@ -49,6 +49,7 @@ def initialize_database():
                 print("Admin user created.")
         except sqlite3.IntegrityError as e:
             print(f"Error creating admin user: {e}")
+            print(f"Initializing database at {vote_db_path}")
 
 def register(username, password, role):
     with lock:

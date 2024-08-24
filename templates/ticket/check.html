@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{{ url_for('static', filename='image/logo.jpg') }}">
+    <title>Check Ticket</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #092635;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            color: #5d5c61;
+            font-size: 2rem;
+        }
+        section {
+            margin-top: 5%;
+        }
+        form {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        input[type="text"], select {
+            width: 95%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #5d5c61;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-left: 33%;
+        }
+        button:hover {
+            background-color: #4d4c51;
+        }
+        .seat {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+            margin-bottom: 20px;
+        }
+        .seat-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .ticket-info {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .ticket-info li {
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+        }
+        .ticket-info li:last-child {
+            border-bottom: none;
+        }
+        .ticket-info li strong {
+            display: inline-block;
+            width: 120px;
+        }
+        p {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<section>
+    {% if 'logged_in' in session %}
+    <button> <a href="/logout">Logout</a></button>
+    {% else %}
+        <a href="/login">Login</a>
+    {% endif %}
+
+    <h1>Biljett Kontroll</h1>
+    <form action="/check-ticket" method="POST">
+        <label for="search_by">Sök efter:</label>
+        <select id="search_by" name="search_by">
+            <option value="ticket_number">Biljett Nummer</option>
+            <option value="name">Namn</option>
+            <option value="email">E-mail</option>
+            <option value="row">Rad</option>
+        </select>
+        <br>
+        <label for="value">Värde:</label>
+        <input type="text" id="value" name="value" required>
+        <small>Om du söker efter rad anger du "rad" följt av radnumret (t.ex. rad 1 för rad 1).</small>
+        <br>
+        <button type="submit">Kontrollera biljett</button>
+    </form>
+
+    {% if tickets %}
+        {% for ticket in tickets %}
+            <div class="seat">
+                <div class="seat-info">
+                    <ul class="ticket-info">
+                        <li><strong>Biljett Nummer:</strong> {{ ticket[0] }}</li>
+                        <li><strong>Rad:</strong> {{ ticket[1] }}</li>
+                        <li><strong>Plats:</strong> {{ ticket[2] }}</li>
+                        <li><strong>Status:</strong> {{ ticket[3] }}</li>
+                        <li><strong>Namn:</strong> {{ ticket[4] }}</li>
+                        <li><strong>E-mail:</strong> {{ ticket[5] }}</li>
+                        <li><strong>Skannad:</strong> {{ ticket[6] }}</li> <!-- Adjust index if needed -->
+                    </ul>
+                </div>
+            </div>
+            <div style="margin-bottom: 10px;"></div> <!-- Adjust the margin as needed -->
+        {% endfor %}
+    {% elif result %}
+        <p>{{ result }}</p>
+    {% endif %}
+</section>
+</body>
+</html>

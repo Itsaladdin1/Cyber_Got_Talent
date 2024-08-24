@@ -1,7 +1,9 @@
-from flask import Blueprint, render_template, redirect, url_for, request, flash
+from flask import Blueprint, render_template, redirect, url_for, request, flash, current_app
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from slugify import slugify
+import os
+from sqlalchemy import func
 
 # Create a blueprint for the news section
 news_bp = Blueprint('news', __name__, template_folder='templates')
@@ -36,25 +38,24 @@ class NewsArticle(db.Model):
             self.slug = slugify(self.title)
 
 # Routes
-@news_bp.route('/news')
+@news_bp.route('/')
 def index():
     latest_articles = NewsArticle.query.order_by(NewsArticle.published_date.desc()).limit(4).all()
     months = Month.query.all()
-    return render_template('news.html', latest_articles=latest_articles, months=months)
+    return render_template('news/news.html', latest_articles=latest_articles, months=months)
 
-@news_bp.route('/news/<slug>')
+@news_bp.route('/<slug>')
 def news_detail(slug):
     article = NewsArticle.query.filter_by(slug=slug).first_or_404()
-    return render_template('news_detail.html', article=article)
+    return render_template('news/news_detail.html', article=article)
 
 @news_bp.route('/month/<month_name>')
 def news_by_month(month_name):
-    # Ensure the month_name is case insensitive
     month = Month.query.filter(db.func.lower(Month.name) == month_name.lower()).first_or_404()
     articles = NewsArticle.query.filter_by(month_id=month.id).all()
-    return render_template('news_by_month.html', month=month, articles=articles)
+    return render_template('news/news_by_month.html', month=month, articles=articles)
 
-@news_bp.route('/admin/news', methods=['GET', 'POST'])
+@news_bp.route('/admin', methods=['GET', 'POST'])
 def add_news():
     if request.method == 'POST':
         title = request.form['title']
@@ -64,7 +65,7 @@ def add_news():
         image_file = request.files['image']
 
         # Ensure the upload directory exists
-        upload_folder = news_bp.config['UPLOAD_FOLDER']
+        upload_folder = current_app.config['UPLOAD_FOLDER']
         if not os.path.exists(upload_folder):
             os.makedirs(upload_folder)
 
@@ -80,7 +81,7 @@ def add_news():
             db.session.add(month)
             db.session.commit()
 
-        # Create a new article and generate slug
+        # Create a new article
         new_article = NewsArticle(
             title=title,
             publisher=publisher,
@@ -92,7 +93,7 @@ def add_news():
         db.session.add(new_article)
         db.session.commit()
 
-        flash('News article added successfully!')
-        return redirect(url_for('news.index'))
+        # Redirect to the new article's detail page
+        return redirect(url_for('news/news.news_detail', slug=new_article.slug))
 
-    return render_template('admin_add_news.html')
+    return render_template('news/admin_add_news.html')

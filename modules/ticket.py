@@ -31,30 +31,41 @@ def init_db(tickets_db_path):
         c = conn.cursor()
 
         # Create tables if they do not exist
-        c.execute('''CREATE TABLE IF NOT EXISTS users
-                     (username TEXT PRIMARY KEY, password TEXT)''')
-
         c.execute('''
-        CREATE TABLE IF NOT EXISTS tickets
-            (ticket_number TEXT PRIMARY KEY, 
-            row INTEGER, 
-            seat INTEGER, 
-            status TEXT CHECK(status IN ('available', 'booked')) DEFAULT 'available', 
-            name TEXT DEFAULT "", 
-            email TEXT DEFAULT "", 
-            scanned TEXT CHECK(scanned IN ('not_scanned', 'scanned')) DEFAULT 'not_scanned')
+            CREATE TABLE IF NOT EXISTS users (
+                username TEXT PRIMARY KEY, 
+                password TEXT
+            )
         ''')
 
-        c.execute('''CREATE TABLE IF NOT EXISTS scans
-                     (id INTEGER PRIMARY KEY AUTOINCREMENT, 
-                     ticket_number TEXT, 
-                     scanned_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)''')
+        c.execute('''
+            CREATE TABLE IF NOT EXISTS tickets (
+                ticket_number TEXT PRIMARY KEY, 
+                row INTEGER, 
+                seat INTEGER, 
+                status TEXT CHECK(status IN ('available', 'booked')) DEFAULT 'available', 
+                name TEXT DEFAULT "", 
+                email TEXT DEFAULT "", 
+                scanned TEXT CHECK(scanned IN ('not_scanned', 'scanned')) DEFAULT 'not_scanned'
+            )
+        ''')
 
-        c.execute('''CREATE TABLE IF NOT EXISTS customer
-                     (email TEXT PRIMARY KEY, 
-                     name TEXT)''')
+        c.execute('''
+            CREATE TABLE IF NOT EXISTS scans (
+                id INTEGER PRIMARY KEY AUTOINCREMENT, 
+                ticket_number TEXT, 
+                scanned_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        ''')
 
-        # Check if tickets table is empty
+        c.execute('''
+            CREATE TABLE IF NOT EXISTS customer (
+                email TEXT PRIMARY KEY, 
+                name TEXT
+            )
+        ''')
+
+        # Check if the tickets table is empty
         c.execute('SELECT COUNT(*) FROM tickets')
         count = c.fetchone()[0]
 

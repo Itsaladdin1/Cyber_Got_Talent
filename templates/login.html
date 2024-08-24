@@ -9,7 +9,7 @@
 <style>
     body {
     background: #01000c;
-    color: white;
+    color: grey;
     font-family: Arial, sans-serif; 
     min-height: 100vh;
     margin: 0;
@@ -31,6 +31,7 @@
     max-width: 400px;
     width: 100%;
     text-align: center;
+    margin-top:-7%;
 }
 
 .form-container h2 {
@@ -321,7 +322,7 @@ button[type="submit"]:hover {
             <div class="text">Cyber Got Talent</div>
         </div>
         <div class="pill" id="pill"></div>
-        <div class="login"><a href="/login">LOGIN</a></div>
+        <div class="login"><a href="/login">LOGGA IN</a></div>
         <div class="line"></div>
     </div>
     <div class="navigation-menu" id="navigation-menu">
@@ -332,7 +333,7 @@ button[type="submit"]:hover {
                 <li><a href="/table-uno">TABELL</a></li>
                 <li><a href="/vote">RÖSTA</a></li>
                 <li><a href="/news">NYHETER</a></li>
-                <li><a href="/tickets">KÖP BILJETTER</a></li>
+                <li><a href="/ticket">KÖP BILJETTER</a></li>
                 <li><a href="/merch">MERCH</a></li>
             </ul>
         </div>
@@ -359,17 +360,18 @@ button[type="submit"]:hover {
             </form>
         </div> -->
         <div class="form-container">
-            <h2>Login</h2>
+            <p>Obs! det här är bara för personaler</p>
+            <h2>Logga in</h2>
             <form action="/login" method="POST">
                 <div class="form-group">
-                    <label for="login_username">Username:</label>
+                    <label for="login_username">Användarnamn:</label>
                     <input type="text" id="login_username" name="username" required>
                 </div>
                 <div class="form-group">
-                    <label for="login_password">Password:</label>
+                    <label for="login_password">Lösenord:</label>
                     <input type="password" id="login_password" name="password" required>
                 </div>
-                <button type="submit">Login</button>
+                <button type="submit">Logga in</button>
             </form>
         </div>
     </div>

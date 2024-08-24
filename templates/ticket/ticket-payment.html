@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{{ url_for('static', filename='image/logo.jpg') }}">
+    <title>Payment</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<style>
+    body {
+    font-family: Arial, sans-serif;
+    background-color: #092635;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+}
+
+.card {
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    padding: 20px;
+    max-width: 400px;
+    width: 100%;
+    text-align: center;
+}
+
+h1 {
+    color: #333;
+    margin-bottom: 20px;
+}
+
+p {
+    color: #666;
+    margin-bottom: 20px;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+ul li {
+    background: #f9f9f9;
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+</style>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>Betalningssida</h1>
+            <p>Bekräfta din biljettinformation:</p>
+            <ul>
+                <li>Namn: {{ name }}</li>
+                <li>E-mail: {{ email }}</li>
+                <li>Biljett-ID: {{ ticket_number }} (Obs! detta blir din biljett)</li>
+                <li>Rad: {{ row }}</li>
+                <li>Plats: {{ seat }}</li>
+            </ul>
+            <form action="/create-checkout-session" method="POST" id="checkout-form">
+                <input type="hidden" name="ticket_id" value="{{ ticket_number }}">
+                <input type="hidden" name="name" value="{{ name }}">
+                <input type="hidden" name="row" value="{{ row }}">
+                <input type="hidden" name="seat" value="{{ seat }}">
+                <button type="submit" id="checkout-button">Betala nu</button>
+            </form>
+        </div>
+    </div>
+    <script src="https://js.stripe.com/v3/"></script>
+    <script>
+        const stripe = Stripe('pk_test_51PUzFcP5lJfzmHx5zJFstT6C4W2uw7S7yO61UaZdcoxH1mq6V53OOWQpDr38G14Z3whsWGhxNrx85fksWAQj62D6002fgMb5Yb'); // Replace with your Stripe test mode publishable key
+
+        const checkoutButton = document.getElementById('checkout-button');
+        checkoutButton.addEventListener('click', async (e) => {
+            e.preventDefault();
+
+            const response = await fetch('/create-checkout-session', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams(new FormData(document.getElementById('checkout-form')))
+            });
+
+            const session = await response.json();
+            if (session.error) {
+                alert(session.error);
+            } else {
+                stripe.redirectToCheckout({ sessionId: session.sessionId });
+            }
+        });
+    </script>
+</body>
+</html>
