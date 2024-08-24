@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ month.name }} News</title>
+</head>
+<body>
+    <h1>News for {{ month.name }}</h1>
+    <ul>
+        {% for article in articles %}
+        <li>
+            <a href="{{ url_for('news.news_detail', slug=article.slug) }}">
+                <img src="{{ url_for('static', filename='news_images/' + article.image) }}" alt="{{ article.title }}" width="100">
+                <h2>{{ article.title }}</h2>
+            </a>
+            <p>Published by {{ article.publisher }} on {{ article.published_date.strftime('%Y-%m-%d') }}</p>
+<!--             <p>Published by {{ article.publisher }} on {{ article.published_date.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+ -->        </li>
+        {% endfor %}
+    </ul>
+    <a href="{{ url_for('news.index') }}">Back to Home</a>
+</body>
+</html>

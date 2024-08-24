@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{{ url_for('static', filename='image/logo/logo-cybergymnasiet.png') }}">
+    <title>Candidates</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #121212;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            color: #e0e0e0;
+        }
+
+        h1 {
+            text-align: center;
+            margin: 20px 0;
+            color: #bb86fc;
+        }
+
+        table {
+            width: 90%;
+            max-width: 1200px;
+            border-collapse: collapse;
+            background-color: #1e1e1e;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #333;
+        }
+
+        th {
+            background-color: #333;
+            color: #ffffff;
+        }
+
+        td {
+            color: #dddddd;
+        }
+
+        img {
+            max-width: 100px;
+            height: auto;
+            display: block;
+            margin: auto;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        button {
+            background-color: #007bff;
+            color: #ffffff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        form {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .back-button {
+            background-color: #dc3545;
+            color: #ffffff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin: 20px 0;
+            align-self: flex-start;
+            margin-left: 20px;
+        }
+
+        .back-button:hover {
+            background-color: #c82333;
+        }
+    </style>
+</head>
+<body>
+    <button class="back-button" onclick="history.back()">Go Back</button>
+    <h1>Välkommen {{ username }}, 😊</h1>
+    <h1>Candidates</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Image</th>
+                <th>Description</th>
+                <th>Vote</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for candidate in candidates %}
+            <tr>
+                <td>{{ candidate['id'] }}</td>
+                <td>{{ candidate['name'] }}</td>
+                <td><img src="{{ candidate['image_url'] }}" alt="{{ candidate['name'] }}"></td>
+                <td>{{ candidate['description'] }}</td>
+                <td>
+                    <form method="post" action="/vote">
+                        <input type="hidden" name="vote_for" value="{{ candidate['id'] }}">
+                        <button type="submit">Vote</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

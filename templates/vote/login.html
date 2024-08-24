@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link type="icon" rel="icon" href="{{ url_for('static', filename='image/logo.jpg') }}">
+    <title>Login Page</title>
+</head>
+<style>
+    body {
+    background: #01000c;
+    color: white;
+    font-family: Arial, sans-serif; 
+    min-height: 100vh;
+    margin: 0;
+    overflow: hidden;
+}
+   .container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    opacity:1;
+}
+
+.form-container {
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    padding: 40px;
+    max-width: 400px;
+    width: 100%;
+    text-align: center;
+}
+
+.form-container h2 {
+    margin-bottom: 30px;
+    color: #333;
+    font-size: 32px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    color: #555;
+    font-size: 18px;
+}
+
+input[type="text"],
+input[type="password"] {
+    width: calc(100% - 12px);
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    background-color: rgba(255, 255, 255, 0.8);
+    transition: all 0.3s ease;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus {
+    outline: none;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+button[type="submit"] {
+    width: 100%;
+    margin-left:0%;
+    padding: 12px 0;
+    border: none;
+    border-radius: 5px;
+    background: linear-gradient(to right, #FFC371, #FF5F6D);
+    color: #fff;
+    font-size: 18px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+button[type="submit"]:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 95, 109, 0.4);
+}
+.navigation-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: transparent;
+            position: relative;
+            height: 100px;
+        }
+
+        .left-side {
+            display: flex;
+            align-items: center;
+        }
+
+        .pill {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .circle {
+            width: 70px;
+            height: 70px;
+            background-color: white;
+            border-radius: 50%;
+            display: flex;
+            margin-left: 100px;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .circle img {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+            display: block;
+        }
+
+        .text {
+            margin-left: 30px;
+        }
+
+        .pill::after {
+            content: '↓';
+            font-size: 50px;
+            margin-left: 10px;
+            transition: transform 0.3s;
+        }
+
+        .pill.up::after {
+            content: '↑';
+            margin-left: -320px;
+            transition: transform 0.3s;
+        }
+
+        .line {
+            position: absolute;
+            top: 100%;
+            left: 5%;
+            width: 90%;
+            height: 1px;
+            background-color: white;
+            transform: translateY(-50%) rotate(180deg);
+        }
+
+        .login a{
+            cursor: pointer;
+            margin-right: 150px;
+            color: white;
+            text-decoration: none;
+        }
+
+        .navigation-menu {
+            display: none;
+            flex-direction: row;
+            align-items: flex-start;
+            padding: 20px;
+            position: absolute;
+            top: 121px;
+            left: 5%;
+            width: 88%;
+            z-index: 2;
+            background: rgba(255, 255, 255, 0.16);
+            border-radius: 16px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(6.6px);
+            -webkit-backdrop-filter: blur(6.6px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .navigation-links {
+            width: 20%;
+        }
+
+        .navigation-links ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .navigation-links ul li {
+            margin: 10px 0;
+            cursor: pointer;
+            text-align:center;
+            margin-top:8%;
+            margin-left: 50%;
+        }
+
+        .navigation-links a
+        {
+            color: white;
+            text-decoration: none;
+        }
+
+        .divider {
+            position: absolute;
+            top: 50%;
+            left: 20%;
+            width: 20%;
+            height: 1px;
+            background-color: white;
+            transform: translateY(50%) rotate(90deg);
+        }
+
+        .advertisement {
+            width: 100%;
+            text-align: center;
+            margin-top: 1%;
+            text-align: center;
+        }
+
+        .advertisement img {
+            width: 70%;
+            height: 250px;
+            margin-top: 1%;
+            margin-left: 20%;
+        }
+        .rek{
+            margin-left: 20%;
+            text-transform: uppercase;
+            font-weight: bolder;
+        }
+
+@media only screen and (max-width: 600px) {
+        .container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.form-container {
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    padding: 40px;
+    max-width: 400px;
+    width: 100%;
+    text-align: center;
+}
+
+.form-container h2 {
+    margin-bottom: 30px;
+    color: #333;
+    font-size: 32px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    color: #555;
+    font-size: 18px;
+}
+
+input[type="text"],
+input[type="password"] {
+    width: calc(100% - 12px);
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    background-color: rgba(255, 255, 255, 0.8);
+    transition: all 0.3s ease;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus {
+    outline: none;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+button[type="submit"] {
+    width: 100%;
+    margin-left:0%;
+    padding: 12px 0;
+    border: none;
+    border-radius: 5px;
+    background: linear-gradient(to right, #FFC371, #FF5F6D);
+    color: #fff;
+    font-size: 18px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+button[type="submit"]:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 95, 109, 0.4);
+}
+}
+</style>
+<body>
+    <div class="navigation-bar">
+        <div class="left-side">
+            <div class="circle">
+                <img src="../static/image/Cyber Got Talent white.png" alt="Logo">
+            </div>
+            <div class="text">Cyber Got Talent</div>
+        </div>
+        <div class="pill" id="pill"></div>
+        <div class="login"><a href="/login">LOGIN</a></div>
+        <div class="line"></div>
+    </div>
+    <div class="navigation-menu" id="navigation-menu">
+        <div class="navigation-links">
+            <ul>
+                <li><a href="/">HEM</a></li>
+                <li><a href="/about">OM OSS</a></li>
+                <li><a href="/table-uno">TABELL</a></li>
+                <li><a href="/vote">RÖSTA</a></li>
+                <li><a href="/news">NYHETER</a></li>
+                <li><a href="/tickets">KÖP BILJETTER</a></li>
+                <li><a href="/merch">MERCH</a></li>
+            </ul>
+        </div>
+        <div class="divider"></div>
+        <div class="advertisement">
+            <div class="rek">REKLAM</div>
+            <img src="../static/image/popup.png" alt="Halloween Ad">
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- <div class="form-container">
+            <h2>Register</h2>
+            <form action="/register" method="POST">
+                <div class="form-group">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <button type="submit">Register</button>
+            </form>
+        </div> -->
+        <div class="form-container">
+            <h2>Login</h2>
+            <form action="/login" method="POST">
+                <div class="form-group">
+                    <label for="login_username">Username:</label>
+                    <input type="text" id="login_username" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="login_password">Password:</label>
+                    <input type="password" id="login_password" name="password" required>
+                </div>
+                <button type="submit">Login</button>
+            </form>
+        </div>
+    </div>
+</body>
+<script>
+            document.getElementById('pill').addEventListener('click', function() {
+            var menu = document.getElementById('navigation-menu');
+            var pill = document.getElementById('pill');
+            if (menu.style.display === 'none' || menu.style.display === '') {
+                menu.style.display = 'flex';
+                pill.classList.add('up');
+            } else {
+                menu.style.display = 'none';
+                pill.classList.remove('up');
+            }
+        });
+</script>
+</html>

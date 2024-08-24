@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>News</title>
+</head>
+<style>
+        .month-button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 5px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .month-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+<body>
+    <h1>Latest News</h1>
+    <ul>
+        {% for article in latest_articles %}
+        <li>
+            <a href="{{ url_for('news.news_detail', slug=article.slug) }}">
+                <img src="{{ url_for('static', filename='news_images/' + article.image) }}" alt="{{ article.title }}" width="100">
+                <h2>{{ article.title }}</h2>
+            </a>
+            <p>Published by {{ article.publisher }} on {{ article.published_date.strftime('%Y-%m-%d') }}</p>
+<!--             <p>Published by {{ article.publisher }} on {{ article.published_date.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+ -->        </li>
+        {% endfor %}
+    </ul>
+    <h2>Archives</h2>
+    <ul>
+        {% for month in months %}
+        <li>
+            <a href="{{ url_for('news.news_by_month', month_name=month.name) }}" class="month-button">
+                {{ month.name }} News
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
